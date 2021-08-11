@@ -8,7 +8,7 @@ const notesRoutes = require('./modules/notes/routes/notes.routes.js')
 app.use(express.json());
 // ** end** //
 
-app.get("/", (req, res) => { // Default endpoint (GET)
+app.get("/", (req, res) => { // ** Default endpoint (GET) ** //
   res.send('express')
 });
 
