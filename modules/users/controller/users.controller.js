@@ -1,28 +1,62 @@
-const fs = require('fs')
-const path = require('path')
-// ** DB ** //
-// let users = [
-//   { id: 1, name: "Muhammad Akmal", age: 21 },
-//   { id: 2, name: "Ali Mahmoud", age: 23 },
-//   { id: 3, name: "Ahmed Magdy", age: 24 },
-//   { id: 4, name: "Samar Selim", age: 30 },
-//   { id: 5, name: "Heba Ahmed", age: 25 },
-// ];
-// ** End ** //
+const connection = require("../../../configration/config");
 
 //** Get all users **//
 const getAllUsers = (req, res) => {
-  let data = fs.readFileSync(path.join(__dirname, "../db/db.json"))
-  let parsedData = JSON.parse(data)
-  res.json(parsedData);
+  connection.query(`SELECT * FROM users`, (err, data) => {
+    if (data != null) {
+      res.json({ message: `success`, data: data });
+    } else {
+      res.json({ message: `error`, error: err });
+    }
+  });
 };
 
+//** Add user endpoint **//
 const addUser = (req, res) => {
-  users.push(req.body);
-  res.json({message: `Success`})
+  let { name, email, password } = req.body;
+  connection.query(
+    `INSERT INTO users( name, email, password) VALUES ('${name}','${email}','${password}')`,
+    (err, data) => {
+      if (err) {
+        res.json({ message: err });
+      } else {
+        res.json({ message: "Added successfully", data });
+      }
+    }
+  );
+};
+
+//** Update user endpoint **//
+const updateUser = (req, res) => {
+  let { name, email, password } = req.body;
+  let id = req.params.id;
+  connection.query(
+    `UPDATE users SET name = '${name}', email = '${email}', password = '${password}' WHERE id = ${id}`,
+    (err, data) => {
+      if (err) {
+        res.json({ message: "error", err });
+      } else {
+        res.json({ message: "updated successfully", data });
+      }
+    }
+  );
+};
+
+//** Delete user endpoint **//
+const deleteUser = (req, res) => {
+  let id = req.params.id;
+  connection.query(`DELETE FROM users WHERE id = ${id}`, (err, data) => {
+    if (err) {
+      res.json({ message: "error", err });
+    } else {
+      res.json({ message: "Deleted successfully", data });
+    }
+  });
 };
 
 module.exports = {
   getAllUsers,
   addUser,
+  updateUser,
+  deleteUser,
 };
