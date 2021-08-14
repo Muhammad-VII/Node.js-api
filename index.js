@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors")
 const port = 3000;
 const app = express();
 const usersRoutes = require('./modules/users/routes/users.routes.js')
@@ -6,7 +7,8 @@ const notesRoutes = require('./modules/notes/routes/notes.routes.js')
 
 // ** middleware ** //
 app.use(express.json());
-// ** end** //
+app.use(cors())
+// ** end ** //
 
 app.get("/", (req, res) => { // ** Default endpoint (GET) ** //
   res.send('express')
